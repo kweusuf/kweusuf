@@ -7,8 +7,8 @@
 ---
 
 ## 🚀 What I Do
-- 🛠️ Build backend systems with **Go, Clojure, Node.js**
-- 📊 Work with **databases, caching, and scalable infra**
+- 🛠️ Build backend systems with **Go, Java, Clojure**
+- 📊 Work with **Databases, Caching, and Scalable Infra**
 - 🤖 Explore **AI integrations & applied ML**
 - 🌍 Share ideas, learnings, and code with the community  
 

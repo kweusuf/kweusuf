@@ -1,0 +1,47 @@
+name: Update Resume Preview
+
+on:
+  schedule:
+    # Run daily at 6:00 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-preview:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install ImageMagick and Ghostscript
+      run: sudo apt-get update && sudo apt-get install -y imagemagick wget ghostscript
+
+    - name: Download latest resume PDF
+      run: |
+        wget -O assets/resume.pdf "https://drive.google.com/uc?export=download&id=191t9WDPxvc-tl4gKenMbwUbahvO4RymU"
+        if [ $? -eq 0 ]; then
+          echo "Successfully downloaded resume PDF"
+        else
+          echo "Failed to download resume PDF"
+          exit 1
+        fi
+
+    - name: Convert PDF to image
+      run: |
+        chmod +x update-resume-preview.sh
+        ./update-resume-preview.sh
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add assets/resume-preview.jpg
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Update resume preview image [Daily sync]"
+          git push
+        fi

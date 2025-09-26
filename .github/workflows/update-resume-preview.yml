@@ -18,10 +18,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
     - name: Install ImageMagick and Ghostscript
-      run: sudo apt-get update && sudo apt-get install -y imagemagick wget ghostscript
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y imagemagick wget ghostscript
+        # Ensure ImageMagick commands are available
+        which convert || echo "convert not found"
+        which magick || echo "magick not found"
 
     - name: Download latest resume PDF
       run: |

@@ -1,1 +1,1 @@
-[![Resume](./assets/resume-preview.jpg)](https://drive.google.com/file/d/191t9WDPxvc-tl4gKenMbwUbahvO4RymU/view?usp=drive_link)
+[![Resume](./assets/resume.jpg)](https://kweusuf.is-a.dev)

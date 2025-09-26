@@ -19,7 +19,12 @@ fi
 echo "Converting $PDF_FILE to $OUTPUT_IMAGE..."
 
 # Convert PDF to image with high quality (first page only)
-magick -density 250 "$PDF_FILE[0]" -quality 95 -background white -flatten "$OUTPUT_IMAGE"
+# Try magick first (ImageMagick 7), fallback to convert (ImageMagick 6)
+if command -v magick >/dev/null 2>&1; then
+    magick -density 200 "$PDF_FILE[0]" -quality 95 -background white -flatten "$OUTPUT_IMAGE"
+else
+    convert -density 200 "$PDF_FILE[0]" -quality 95 -background white -flatten "$OUTPUT_IMAGE"
+fi
 
 if [ $? -eq 0 ]; then
     echo "Successfully updated $OUTPUT_IMAGE"

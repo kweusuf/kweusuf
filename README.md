@@ -1,1 +1,1 @@
-[![Resume](./assets/resume.jpg)](https://kweusuf.is-a.dev)
+[![Resume](./assets/resume-preview.jpg)](https://kweusuf.is-a.dev)

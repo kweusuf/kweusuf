@@ -14,6 +14,18 @@ The GitHub Action runs **daily at 6:00 AM UTC** and:
 ### Prerequisites
 - GitHub repository with Actions enabled
 - Resume PDF hosted at `https://kweusuf.is-a.dev/resume.pdf`
+- Personal Access Token (PAT) with `repo` permissions for automated commits
+
+### Setting up Personal Access Token
+1. Go to GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)
+2. Click "Generate new token (classic)"
+3. Select scopes: `repo` (Full control of private repositories)
+4. Copy the generated token
+5. Go to your repository Settings > Secrets and variables > Actions
+6. Click "New repository secret"
+7. Name: `PAT_TOKEN`
+8. Value: Paste your personal access token
+9. Click "Add secret"
 
 ### Manual Testing
 You can also run the script locally for testing:

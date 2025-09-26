@@ -49,3 +49,5 @@ The GitHub Action is already configured to:
 - The action will only commit changes if the PDF has actually been updated
 - Check the Actions tab in your GitHub repository for run logs
 - The script converts only the first page of the PDF
+- **ImageMagick Command Issue**: The workflow now tries both `magick` (IM 7) and `convert` (IM 6) commands for compatibility
+- **GitHub Actions Not Running**: Make sure GitHub Actions are enabled in repository Settings > Actions > General

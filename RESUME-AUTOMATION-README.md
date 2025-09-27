@@ -63,3 +63,5 @@ The GitHub Action is already configured to:
 - The script converts only the first page of the PDF
 - **ImageMagick Command Issue**: The workflow now tries both `magick` (IM 7) and `convert` (IM 6) commands for compatibility
 - **GitHub Actions Not Running**: Make sure GitHub Actions are enabled in repository Settings > Actions > General
+- **No Changes Committed**: The workflow checks both staged and unstaged changes. If no changes are detected, it means the resume preview is already up to date
+- **Git Push Permission Issues**: Add a PAT_TOKEN secret with `repo` permissions to your repository secrets

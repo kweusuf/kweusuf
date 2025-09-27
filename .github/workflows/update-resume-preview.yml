@@ -48,9 +48,12 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add assets/resume-preview.jpg
-        if git diff --staged --quiet; then
-          echo "No changes to commit"
+
+        # Check if there are any changes (staged or unstaged)
+        if git diff --quiet && git diff --staged --quiet; then
+          echo "No changes to commit - resume preview is up to date"
         else
+          echo "Changes detected, committing..."
           git commit -m "Update resume preview image [Daily sync]"
           git push
         fi

@@ -1,51 +1,24 @@
-<div class="image-container">
-  <a href="https://kweusuf.is-a.dev" class="image-link">
-    <img src="./assets/resume-preview.jpg" alt="Resume" class="resume-image">
-    <div class="popup">Click to view full resume</div>
+<!-- GitHub-compatible version with hover popup -->
+<div style="position: relative; display: inline-block;">
+  <a href="https://kweusuf.is-a.dev" style="text-decoration: none;">
+    <img src="./assets/resume-preview.jpg" alt="Resume Preview" title="Click to view full resume" style="width: 100%; max-width: 600px; height: auto; border: 2px solid #ddd; border-radius: 8px; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#007acc'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'" onmouseout="this.style.borderColor='#ddd'; this.style.boxShadow='none'">
   </a>
 </div>
 
+<!-- Alternative simple markdown version for maximum compatibility -->
+<!--
+[![Resume](./assets/resume-preview.jpg)](https://kweusuf.is-a.dev)
+-->
+
 <style>
-.image-container {
-  position: relative;
-  display: inline-block;
-}
-
-.image-link {
-  position: relative;
-  text-decoration: none;
-}
-
-.resume-image {
-  width: 100%;
-  max-width: 800px;
-  height: auto;
-  transition: filter 0.3s ease;
+/* Enhanced styles for local viewing */
+img[alt="Resume Preview"] {
   cursor: pointer;
+  border-radius: 8px;
 }
 
-.popup {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1000;
-}
-
-.image-container:hover .popup {
-  opacity: 1;
-}
-
-.image-container:hover .resume-image {
-  filter: brightness(1.1);
+img[alt="Resume Preview"]:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 </style>

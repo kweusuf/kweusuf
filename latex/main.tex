@@ -1,0 +1,288 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textbf{\small#3} & \textnormal{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+% \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+%   \textbf{\href{http://sourabhbajaj.com/}{\Large Sourabh Bajaj}} & Email : \href{mailto:sourabh@sourabhbajaj.com}{sourabh@sourabhbajaj.com}\\
+%   \href{http://sourabhbajaj.com/}{http://www.sourabhbajaj.com} & Mobile : +1-123-456-7890 \\
+% \end{tabular*}
+
+\begin{center}
+    \textbf{\Huge \scshape \href{https://eusuf.is-a.dev/}{Eusuf Kanchwala}} \\ \vspace{1pt}
+     \href{tel:+91-9479721383}{\small +919479721383} $|$ \href{mailto:kweusuf@gmail.com}{{\small kweusuf@gmail.com}} $|$ 
+    \href{https://www.linkedin.com/in/kweusuf}{{\small linkedin.com/kweusuf}} $|$
+    \href{https://www.github.com/kweusuf}{{\small github.com/kweusuf}}
+\end{center}
+
+% \small{
+%     Backend Engineer with 7 years of experience building scalable, cloud-native systems for enterprise data protection and automation platforms. Specialized in Java, Go, and microservices, with proven impact in reducing infra costs by 45\%, cutting latency by 25\%, and eliminating 100\% high-severity security risks. Strong track record in cloud platforms (AWS, Azure, GCP), on-call reliability engineering, and leading cross-functional initiatives.
+% }
+
+% \small{
+%     Backend Engineer specializing in distributed systems and data protection platforms. Proven track record: 45\% cost reduction, 40\% performance improvement, 100\% elimination of high-severity vulnerabilities. Patent co-inventor for ransomware recovery solutions.
+% }
+
+\small{
+    Backend Engineer with 8 years building enterprise-grade data protection, disaster recovery, and automation platforms. Expertise in Java, Go, and cloud-native microservices across AWS, Azure, and GCP. Patent co-inventor for ransomware resilience technology.
+}
+
+
+%
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{
+        \item{
+            \textbf{Core Expertise}{: Java, Golang, Distributed Systems, Microservices, AWS, Azure, Kubernetes, Spring Boot, SQL/NoSQL Databases} \\
+            \textbf{Technologies}{: Python, Bash, Clojure, GCP, GraphQL, Kafka, RabbitMQ, Redis, Docker, Jenkins, Git} \\
+            \textbf{Security \& Compliance}{: RBAC/SSO, SonarQube, Snyk, Gitleaks, Blackduck} \\
+        }
+    }
+ \end{itemize}
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+\small{
+\resumeSubHeadingListStart
+    \resumeSubheading
+      {\href{https://www.helpshift.com/}{Helpshift - A Keywords Technology}}{Pune $|$ Remote}
+      {SDE-3}{May 2025 - Present}
+      \resumeItemListStart
+        \resumeItem{Led design and development of backend systems for an enterprise automation platform enabling configurable Branding \& Customisation, FAQs and customer complaint workflows and self-service experiences at scale.}
+        \resumeItem{Partnered with product and platform teams to ship automation features like Duplicate and Replace Bots, App Level Permissions, used by global gaming clients.}
+        % \resumeItem{Served as an on-call backend engineer, ensuring 99.9\% uptime and rapid incident resolution for critical services.}
+      \resumeItemListEnd
+    \resumeSubheading
+      {\href{https://www.infobeans.com/}{InfoBeans Technologies} $|$ \href{https://www.netapp.com}{NetApp}}{Indore $|$ Bangalore}
+      {Consultant $|$ Member of Technical Staff 3}{Apr 2022 -- Apr 2025}
+      \resumeItemListStart
+        \resumeItem{\textbf{Patent Co-inventor \& Technical Lead} \textit{(Patent Pending)}: Designed and prototyped “Cyber Recovery Mechanism”, an air-gapped isolated recovery system for ransomware forensic analysis - productized as \href{https://www.netapp.com/product-updates/ransomware-resilience-service-isolated-recovery/}{Isolated Recovery Environment} in NetApp's \href{https://www.netapp.com/data-services/ransomware-resilience/}{Ransomware Resilience service.}}
+        \resumeItem{Engineered 8+ microservices in Java and Go for NetApp \href{https://www.netapp.com/snapcenter/}{SnapCenter} and \href{https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/}{VMware plugin}, reducing backup operation latency by 25\% and improving overall throughput by 40\%.}
+        \resumeItem{Developed core failover/failback orchestration logic for \href{https://www.netapp.com/data-services/disaster-recovery/}{Disaster Recovery-as-a-Service} in \href{https://bluexp.netapp.com/}{BlueXP}, enabling seamless DR operations across ONTAP, FSx, ANF, and CVO storage platforms.}
+        \resumeItem{Led security compliance for \href{https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity}{US EO 14028}, achieving a 100\% reduction in high-severity vulnerabilities.}
+        \resumeItem{Designed and executed PostgreSQL-to-cloud data warehouse migration strategy for IoT client, implementing sharding, regional load balancing, and disaster recovery—resulting in 45\% infrastructure cost reduction.}
+        % \resumeItem{Worked on \underline{\href{https://www.netapp.com/data-services/disaster-recovery/}{Disaster Recovery as a Service (DRaaS)}} for \underline{\href{https://bluexp.netapp.com/}{NetApp BlueXP}} - SaaS for hybrid multi-cloud applications. This enables failover and failback for data on an \underline{\href{https://www.netapp.com/ontap-data-management-software/}{ONTAP}}/\underline{\href{https://azure.microsoft.com/en-us/services/netapp/}{ANF}}/\underline{\href{https://aws.amazon.com/fsx/}{FSx}}/\underline{\href{https://www.netapp.com/ontap-cloud/}{CVO}} storage cluster backed up to the public cloud in case of an error or a disaster, or if the customer wants to migrate their on-prem setup to the cloud.}
+        % \resumeItem{Won the NetApp Data Services Hackathon for Cleanroom Recovery for Forensic Analysis (CRaaS) which enabled detection and instant provision of air-gapped environments for compromised instances in case of a ransomware attack.}
+        % \resumeItem{Engineered and deployed 8+ components in Java and Golang for \underline{\href{https://www.netapp.com/snapcenter/}{SnapCenter}} - NetApp's backup, restore, and clone solution, its \underline{\href{https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/}{Plugin for VMware vSphere}} and \underline{\href{https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/}{ONTAP Tools for VMware vSphere}}, enhancing overall application performance by 40\% and reducing load times by 25\%, resulting in a more streamlined user experience.}
+        % \resumeItem{Designed and engineered integrity check frameworks and automated the execution of comprehensive SDL activities for making the product compliant with the \underline{\href{https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity}{US government's Executive Order 14028}}. This led to accelerated engagement with various clients and increased confidence in the product by governments and enterprises across the world.}
+        % \resumeItem{Designed and engineered integrity check frameworks for making the product compliant with the US government's Executive Order. This led to accelerated engagement with the Federal government and increased confidence in the product by governments and enterprises across the world.}
+        % \resumeItem{Executed comprehensive SDL activities to ensure product compliance with industry and regulatory standards, leading to a 100\% reduction in critical and high security vulnerabilities and an overall 65\% reduction in security vulnerabilities, hence achieving certification months ahead of schedule.}
+        % \resumeItem{Collaborated across multiple teams to make the product cloud-ready for both AWS(FSx) and Azure(ANF). This is expected to increase customer reach by 20-25\%.}
+        % \resumeItem{Constituted a migration plan for another client's IOT devices' data storage and analysis infrastructure from a single-node Postgres solution to a clustered cloud-hosted warehousing solution with sharding, Disaster recovery and load-balancing for various regions. This was targeted to handle the expected increased loads and enhance DB read times. The customer later reported a cumulative 45\% savings achieved using this solution.}
+      \resumeItemListEnd
+      
+% -----------Multiple Positions Heading-----------
+%    \resumeSubSubheading
+%     {Software Engineer I}{Oct 2014 - Sep 2016}
+%     \resumeItemListStart
+%        \resumeItem{Apache Beam}
+%          {Apache Beam is a unified model for defining both batch and streaming data-parallel processing pipelines}
+%     \resumeItemListEnd
+%    \resumeSubHeadingListEnd
+%-------------------------------------------
+
+    \resumeSubheading
+      {\href{https://www.impetus.com/}{Impetus Technologies}}{Indore}
+      {Senior Software Engineer}{June 2018 -- Apr 2022}
+      \resumeItemListStart
+      \resumeItem{Core contributor to \href{https://www.leaplogic.io/}{LeapLogic}, an ETL modernization platform serving Fortune 500 clients (BofA, AmEx, Wells Fargo), enabling migrations from legacy systems (Teradata, Netezza, Oracle) to cloud-native platforms (AWS Redshift, Snowflake, Databricks).}
+      \resumeItem{Reduced metadata discovery time by 60\% through caching optimizations.}
+      \resumeItem{Architected and implemented enterprise-grade RBAC and SSO authentication system from scratch using Spring Security, enabling secure multi-tenant access control.}
+      \resumeItem{Built a SQL translator (Hackathon project → production pilot), improving trial adoption by 30\%.}
+      \resumeItem{Led and mentored a team of 4 engineers, consistently delivering sprints 25\% ahead of schedule through effective task decomposition and agile practices.}
+        % \resumeItem{Developed various backend components for \underline{\href{https://www.leaplogic.io/}{LeapLogic}} ETL in Java and Python. This product is for enterprises to migrate their Data Warehouse workloads from traditionally expensive solutions to modern Data Lakes, which provide more flexibility, ease of use, and cost-efficiency.}
+        % \resumeItem{\underline{\href{https://www.leaplogic.io/}{LeapLogic}} is successfully being used at various clients such as BofA, AmEx, Wells Fargo, etc and has reduced costs up to 90\% in certain cases. Later, it got integrated into AWS Glue, and now it is being used worldwide.}
+        % \resumeItem{Created and enhanced various utilities and components for Data Source \& Target Metadata Discovery which reduces operational time by 60\% using caching, SSO \& RBAC for application governance, Data, Query and File Validations for the source and transformed data to validate the integrity of the Migration operations, and an integrated Licensing solution.}
+        % \resumeItem{Led the transition of \underline{\href{https://www.leaplogic.io/}{LeapLogic's}} on-prem implementation from HDP and CDH to cloud-native architectures on AWS, Azure, and GCP, enhanced scalability and optimised customer costs by an estimated 40\% to 65\%.}
+        % \resumeItem{Devised an experimental Runtime feature written in Java as part of a Hackathon that enables on-the-fly translation of queries and their execution on cloud warehouse targets. Later, this was targeted towards customers who needed quick access to the tool without the hassle of a full installation. This upgraded customer engagement by 30\%.}
+        % \resumeItem{Was responsible for mentoring and leading a team of 4 people to deliver various SDLC targets. We consistently performed 25\% better against teams of similar capacities.}
+    \resumeItemListEnd
+
+    \resumeSubheading
+      {\href{https://www.tcs.com/}{Tata Consultancy Services}}{Mumbai $|$ Remote}
+      {Intern - Data Mining and Insights}{June 2017 -- Nov 2017}
+      \resumeItemListStart
+        % \resumeItem{Authored a utility using Python to extract actionable insights from incoming flat-file counter data; reduced data processing time by 60\% using advanced DOM parser and increased analytics accuracy by 25\%}
+        \resumeItem{Developed Python-based data processing utility using advanced DOM parsing to extract insights from telecom counter data, reducing processing time by 55\% and improving analytics accuracy by 25\%.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+}
+  
+
+
+% %-----------PROJECTS-----------
+% \section{Projects}
+%     \resumeSubHeadingListStart
+%       \resumeProjectHeading
+%           {\textbf{Gitlytics} $|$ \emph{Python, Flask, React, PostgreSQL, Docker}}{June 2020 -- Present}
+%           \resumeItemListStart
+%             \resumeItem{Developed a full-stack web application using Flask serving a REST API with React as the frontend}
+%             \resumeItem{Implemented GitHub OAuth to get data from user’s repositories}
+%             \resumeItem{Visualized GitHub data to show collaboration}
+%             \resumeItem{Used Celery and Redis for asynchronous tasks}
+%           \resumeItemListEnd
+%       \resumeProjectHeading
+%           {\textbf{Simple Paintball} $|$ \emph{Spigot API, Java, Maven, TravisCI, Git}}{May 2018 -- May 2020}
+%           \resumeItemListStart
+%             \resumeItem{Developed a Minecraft server plugin to entertain kids during free time for a previous job}
+%             \resumeItem{Published plugin to websites gaining 2K+ downloads and an average 4.5/5-star review}
+%             \resumeItem{Implemented continuous delivery using TravisCI to build the plugin upon new a release}
+%             \resumeItem{Collaborated with Minecraft server administrators to suggest features and get feedback about the plugin}
+%           \resumeItemListEnd
+%     \resumeSubHeadingListEnd
+
+
+
+% %-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{\href{https://github.com/kweusuf/url-shortner}{URL Shortener}} $|$ \emph{Golang, Go Kit, MongoDB, Docker, Make}}{April 2025 -- May 2025}
+          \resumeItemListStart
+            \resumeItem{Built production-ready URL shortener with TTL-based expiration, featuring Go Kit microservices architecture, MongoDB persistence, and collision-resistant hash generation.}
+          \resumeItemListEnd
+      % \resumeProjectHeading
+      %     {\textbf{\href{https://github.com/kweusuf/job-scheduler-app}{Job Scheduler}} $|$ \emph{Golang, Go Kit, Docker, Make}}{Dec 2024 -- Jan 2025}
+      %     \resumeItemListStart
+      %       \resumeItem{Created a generic job scheduler inspired by Netflix Conductor with future extensibility in mind.}
+      %     \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{\href{https://github.com/kweusuf/TailFile}{TailFile}} $|$ \emph{Java, JSch, Swing}}{Sep 2020 -- Jan 2021}
+          \resumeItemListStart
+            \resumeItem{Created a Java desktop application for real-time log file monitoring across remote servers via SSH, eliminating repetitive terminal operations for development teams.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+
+
+%-----------EDUCATION-----------
+\section{Education}
+\small{
+    \resumeSubHeadingListStart
+        \resumeSubheading
+            {SVITS}{Indore}
+            {Bachelor of Engineering in Computer Science}{July 2014 -- June 2018}
+    \resumeSubHeadingListEnd
+}
+
+% %-----------REFERENCES-----------
+% \section{References}
+% \small{
+%     \resumeSubHeadingListStart
+%         \resumeSubheading
+%           {Mayur Choubey}{}
+%           {Senior Architect, Gartner}{+91 98933 21119}
+%         \resumeSubheading
+%           {Saurabh Nigam}{}
+%           {Staff Data Engineer, Visa}{+91 89821 63882}
+%     \resumeSubHeadingListEnd
+% }
+
+%-------------------------------------------
+\end{document}

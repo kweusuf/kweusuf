@@ -1,0 +1,95 @@
+name: Build Resume & Update Preview
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6:00 AM UTC
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force rebuild even if sources unchanged'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-preview:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Install Tectonic
+        uses: wtfjoke/setup-tectonic@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for source changes
+        id: check
+        run: |
+          # Compute hash of all LaTeX source files
+          HASH=$(find latex/ -type f \( -name '*.tex' -o -name '*.sty' -o -name '*.cls' -o -name '*.bib' \) \
+              -print0 2>/dev/null | sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1)
+          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+
+          # Compare with stored hash
+          STORED_HASH=""
+          if [[ -f .latex-source-hash ]]; then
+            STORED_HASH=$(cat .latex-source-hash)
+          fi
+
+          FORCE="${{ inputs.force || 'false' }}"
+          if [[ "$FORCE" == "true" ]] || [[ "$HASH" != "$STORED_HASH" ]] || [[ ! -f resume.pdf ]]; then
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
+            echo "Change detected (force=$FORCE, hash_changed=$([[ "$HASH" != "$STORED_HASH" ]] && echo yes || echo no), pdf_exists=$([[ -f resume.pdf ]] && echo yes || echo no))"
+          else
+            echo "rebuild=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected — skipping rebuild."
+          fi
+
+      - name: Save source hash
+        if: steps.check.outputs.rebuild == 'true'
+        run: |
+          echo "${{ steps.check.outputs.hash }}" > .latex-source-hash
+
+      - name: Build LaTeX → PDF
+        if: steps.check.outputs.rebuild == 'true'
+        run: |
+          tectonic latex/main.tex --outfmt pdf --outdir .
+          # tectonic outputs main.pdf based on input filename; rename to resume.pdf
+          mv main.pdf resume.pdf
+
+      - name: Install ImageMagick
+        if: steps.check.outputs.rebuild == 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq imagemagick ghostscript
+
+      - name: Generate preview image
+        if: steps.check.outputs.rebuild == 'true'
+        run: |
+          chmod +x update-resume-preview.sh
+          ./update-resume-preview.sh
+
+      - name: Commit changes
+        if: steps.check.outputs.rebuild == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          git add resume.pdf .latex-source-hash assets/resume-preview.jpg
+
+          if git diff --staged --quiet; then
+            echo "No content changes to commit (binary outputs identical)."
+          else
+            git commit -m "Update resume PDF and preview [daily build]"
+            git push
+          fi

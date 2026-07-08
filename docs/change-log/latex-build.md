@@ -30,3 +30,26 @@ The previous pipeline downloaded the PDF from Google Drive on every run, even wh
 - Binary comparison via `git diff --staged --quiet` prevents empty commits when outputs are identical.
 - `build-resume.sh` uses bash arrays and `[[ ]]` — not POSIX sh, but the shebang is `#!/bin/bash` which is fine.
 - `inputs.force` uses `type: choice` (not `boolean`) because GitHub Actions workflow_dispatch doesn't support boolean inputs.
+## `32cbcdb9` — Automate LaTeX build and preview pipeline
+**Timestamp:** 2026-07-08T20:40:56
+
+**Files changed:**
+```
+.github/workflows/build-and-preview.yml     |  95 +++++++++
+ .github/workflows/update-resume-preview.yml |  59 ------
+ RESUME-AUTOMATION-README.md                 | 128 ++++++++-----
+ build-resume.sh                             | 110 +++++++++++
+ docs/change-log/latex-build.md              |  32 ++++
+ latex/main.tex                              | 288 ++++++++++++++++++++++++++++
+ update-resume-preview.sh                    | 125 ++++++------
+ 7 files changed, 667 insertions(+), 170 deletions(-)
+```
+
+**What changed:** Squashed commit — same content as the detailed entry above. Replaced Google Drive download pipeline with a full LaTeX build pipeline using Tectonic and SHA-256 change detection.
+
+**Why (justification):** Eliminates external dependency on Google Drive URL; compiles from source and only commits when content changes.
+
+**Alternatives considered:** latexmk (heavier), two-workflow design (more coordination), timestamp detection (unreliable in CI).
+
+**Review notes:** `PAT_TOKEN` secret must be configured for push access. First CI run will trigger a rebuild (no stored hash yet). `wtfjoke/setup-tectonic@v3` handles Tectonic installation.
+

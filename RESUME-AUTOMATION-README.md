@@ -10,7 +10,8 @@ The GitHub Action (`.github/workflows/build-and-preview.yml`) runs **daily at 6:
 2. Installs TeX Live (`pdflatex`) and ImageMagick
 3. Compiles `latex/main.tex` → `resume.pdf`
 4. Converts the PDF to a high-quality preview image (`assets/resume-preview.jpg`)
-5. Commits and pushes both files if they changed
+5. Uploads the PDF to Google Drive (replaces existing file, preserves share link)
+6. Commits and pushes both files if they changed
 
 If nothing changed, the workflow exits cleanly with no commits.
 
@@ -86,6 +87,17 @@ Trigger the workflow manually from the **Actions** tab:
 6. Click "New repository secret"
 7. Name: `PAT_TOKEN`, Value: your token
 
+### Setting up Google Drive upload (optional)
+
+The workflow can upload the PDF to Google Drive after building, replacing the existing file (preserves your share link).
+
+1. Install rclone locally: `brew install rclone` (macOS) or `curl https://rclone.org/install.sh | sudo bash` (Linux)
+2. Run `rclone config` and create a remote named `gdrive` with Google Drive access
+3. Copy the config: `cat ~/.config/rclone/rclone.conf`
+4. Add as GitHub secret `RCLONE_CONFIG` with the full config file content
+
+If `RCLONE_CONFIG` is not set, the upload step is skipped silently.
+
 ## Troubleshooting
 
 - **Workflow not running**: Ensure GitHub Actions are enabled in Settings → Actions → General
@@ -93,3 +105,4 @@ Trigger the workflow manually from the **Actions** tab:
 - **Build fails**: Check that `latex/main.tex` compiles locally with `cd latex && pdflatex -interaction=nonstopmode -halt-on-error main.tex`
 - **ImageMagick errors**: The script supports both IM 7 (`magick`) and IM 6 (`convert`)
 - **Push permission issues**: Verify the `PAT_TOKEN` secret has `repo` scope
+- **Google Drive upload fails**: Verify `RCLONE_CONFIG` secret contains the full rclone config file. The remote must be named `gdrive`. Re-run `rclone config` locally if the token expired.

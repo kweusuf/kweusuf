@@ -71,6 +71,21 @@ jobs:
           chmod +x update-resume-preview.sh
           ./update-resume-preview.sh
 
+      - name: Upload PDF to Google Drive
+        if: steps.check.outputs.rebuild == 'true'
+        env:
+          RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
+        run: |
+          if [[ -z "$RCLONE_CONFIG" ]]; then
+            echo "RCLONE_CONFIG secret not set — skipping Google Drive upload."
+            exit 0
+          fi
+          sudo apt-get install -y -qq rclone
+          mkdir -p ~/.config/rclone
+          echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
+          # Replace existing file by ID (preserves share link)
+          rclone backend copyid gdrive 191t9WDPxvc-tl4gKenMbwUbahvO4RymU resume.pdf --drive-replace
+
       - name: Save source hash
         if: steps.check.outputs.rebuild == 'true'
         run: |

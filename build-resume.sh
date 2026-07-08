@@ -8,7 +8,7 @@ set -euo pipefail
 #   ./build-resume.sh --check      # Exit 0 if no changes, 1 if rebuild needed
 #   ./build-resume.sh --output DIR # Write PDF to DIR/resume.pdf
 #
-# Requires: tectonic (https://tectonic-typesetting.github.io/)
+# Requires: pdflatex (texlive-latex-base + texlive-latex-extra)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LATEX_DIR="${SCRIPT_DIR}/latex"
@@ -46,9 +46,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate prerequisites
-if ! command -v tectonic &>/dev/null; then
-    echo "Error: tectonic is not installed." >&2
-    echo "Install: curl --proto '=https' --tlsv1.2 -sSf https://tectonic-typesetting.github.io/book/latest/installation.html | sh" >&2
+if ! command -v pdflatex &>/dev/null; then
+    echo "Error: pdflatex is not installed." >&2
+    echo "Install: brew install --cask mactex (macOS) or apt install texlive-latex-base texlive-latex-extra (Linux)" >&2
     exit 1
 fi
 
@@ -93,10 +93,14 @@ fi
 echo "Compiling $SOURCE_FILE → $OUTPUT_FILE ..."
 mkdir -p "$(dirname "$OUTPUT_FILE")"
 
-tectonic "$SOURCE_FILE" --outfmt pdf --outdir "$(dirname "$OUTPUT_FILE")" 2>&1
-# tectonic names output based on input filename; rename if needed
-GENERATED_PDF="$(dirname "$OUTPUT_FILE")/$(basename "$SOURCE_FILE" .tex).pdf"
-if [[ "$GENERATED_PDF" != "$OUTPUT_FILE" ]] && [[ -f "$GENERATED_PDF" ]]; then
+# Run pdflatex from the source directory so \input paths resolve correctly
+(
+    cd "$LATEX_DIR"
+    pdflatex -interaction=nonstopmode -halt-on-error main.tex 2>&1
+)
+
+GENERATED_PDF="${LATEX_DIR}/main.pdf"
+if [[ -f "$GENERATED_PDF" ]]; then
     mv "$GENERATED_PDF" "$OUTPUT_FILE"
 fi
 

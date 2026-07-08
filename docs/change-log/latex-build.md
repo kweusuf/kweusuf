@@ -53,3 +53,20 @@ The previous pipeline downloaded the PDF from Google Drive on every run, even wh
 
 **Review notes:** `PAT_TOKEN` secret must be configured for push access. First CI run will trigger a rebuild (no stored hash yet). `wtfjoke/setup-tectonic@v3` handles Tectonic installation.
 
+## `6ee64997` — Fill in change-log skeleton for squashed commit
+**Timestamp:** 2026-07-08T20:41:47
+
+**Files changed:**
+```
+docs/change-log/latex-build.md | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+```
+
+**What changed:** Populated the hook-appended skeleton fields for the squashed commit with concrete detail.
+
+**Why (justification):** Hook requires populated fields; the previous skeleton had boilerplate placeholders.
+
+**Alternatives considered:** None — mechanical fill-in.
+
+**Review notes:** No code changes, change-log documentation only.
+

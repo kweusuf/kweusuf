@@ -7,7 +7,7 @@ Automated pipeline that compiles the LaTeX resume to PDF and generates a preview
 The GitHub Action (`.github/workflows/build-and-preview.yml`) runs **daily at 6:00 AM UTC** and:
 
 1. Checks if LaTeX source files have changed (SHA-256 hash comparison)
-2. Installs [Tectonic](https://tectonic-typesetting.github.io/) — a self-contained LaTeX engine
+2. Installs TeX Live (`pdflatex`) and ImageMagick
 3. Compiles `latex/main.tex` → `resume.pdf`
 4. Converts the PDF to a high-quality preview image (`assets/resume-preview.jpg`)
 5. Commits and pushes both files if they changed
@@ -25,7 +25,7 @@ Trigger the workflow manually from the **Actions** tab:
 
 ### Prerequisites
 
-- [Tectonic](https://tectonic-typesetting.github.io/) (`curl --proto '=https' --tlsv1.2 -sSf https://tectonic-typesetting.github.io/book/latest/installation.html | sh`)
+- TeX Live with `pdflatex` (`brew install --cask mactex` on macOS, `apt install texlive-latex-base texlive-latex-extra` on Linux)
 - [ImageMagick](https://imagemagick.org/) (`brew install imagemagick`)
 
 ### Build PDF
@@ -90,6 +90,6 @@ Trigger the workflow manually from the **Actions** tab:
 
 - **Workflow not running**: Ensure GitHub Actions are enabled in Settings → Actions → General
 - **No commits created**: The workflow only commits when content actually changes — check the Actions logs
-- **Build fails**: Check that `latex/main.tex` compiles locally with `tectonic latex/main.tex`
+- **Build fails**: Check that `latex/main.tex` compiles locally with `cd latex && pdflatex -interaction=nonstopmode -halt-on-error main.tex`
 - **ImageMagick errors**: The script supports both IM 7 (`magick`) and IM 6 (`convert`)
 - **Push permission issues**: Verify the `PAT_TOKEN` secret has `repo` scope

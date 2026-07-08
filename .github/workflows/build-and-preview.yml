@@ -27,11 +27,6 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
-      - name: Install Tectonic
-        uses: wtfjoke/setup-tectonic@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Check for source changes
         id: check
         run: |
@@ -55,29 +50,31 @@ jobs:
             echo "No changes detected — skipping rebuild."
           fi
 
-      - name: Save source hash
+      - name: Install dependencies
         if: steps.check.outputs.rebuild == 'true'
         run: |
-          echo "${{ steps.check.outputs.hash }}" > .latex-source-hash
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            texlive-latex-base texlive-latex-extra texlive-fonts-recommended \
+            imagemagick ghostscript
 
       - name: Build LaTeX → PDF
         if: steps.check.outputs.rebuild == 'true'
         run: |
-          tectonic latex/main.tex --outfmt pdf --outdir .
-          # tectonic outputs main.pdf based on input filename; rename to resume.pdf
-          mv main.pdf resume.pdf
-
-      - name: Install ImageMagick
-        if: steps.check.outputs.rebuild == 'true'
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq imagemagick ghostscript
+          cd latex
+          pdflatex -interaction=nonstopmode -halt-on-error main.tex
+          mv main.pdf ../resume.pdf
 
       - name: Generate preview image
         if: steps.check.outputs.rebuild == 'true'
         run: |
           chmod +x update-resume-preview.sh
           ./update-resume-preview.sh
+
+      - name: Save source hash
+        if: steps.check.outputs.rebuild == 'true'
+        run: |
+          echo "${{ steps.check.outputs.hash }}" > .latex-source-hash
 
       - name: Commit changes
         if: steps.check.outputs.rebuild == 'true'

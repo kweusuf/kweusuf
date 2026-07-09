@@ -174,3 +174,45 @@ docs/change-log/gdrive-upload.md | 41 ++++++++++++++++++++++++++++++++++++++++
 
 **Review notes:** No code changes.
 
+## `1ca81d13` — Fill in change-log skeleton for lint-fix commit
+
+**Timestamp:** 2026-07-09T11:51:40
+
+**Files changed:**
+
+```text
+docs/change-log/gdrive-upload.md | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+```
+
+**What changed:** Populated the hook-appended skeleton for commit `b4a8f1af` with concrete detail about the lint fixes.
+
+**Why (justification):** Hook requires populated fields on every commit.
+
+**Alternatives considered:** None — documentation only.
+
+**Review notes:** No code changes.
+
+## `6400bdd8` — Fix RCLONE_CONFIG parsing: use Python for reliable multiline handling
+
+**Timestamp:** 2026-07-09T11:55:30
+
+**Files changed:**
+
+```text
+.github/workflows/build-and-preview.yml | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+```
+
+**What changed:** Replaced `printf '%b'` with Python's `os.environ['RCLONE_CONFIG']` to write the rclone config file. Python reads the environment variable as-is, handling both literal `\n` escape sequences and actual newlines correctly. Also added error handling for missing remote name extraction.
+
+**Why (justification):** Both `echo` and `printf '%b'` failed because GitHub Actions passes multiline secrets as raw strings — the shell treats the entire value (including newlines) as part of the file path argument. Python's `os.environ[]` reads environment variables as strings without shell interpretation, writing them to a file byte-for-byte.
+
+**Alternatives considered:**
+
+- **Base64-encode the secret**: User would need to `base64 ~/.config/rclone/rclone.conf` and store the encoded value. Extra step, but more robust.
+- **Use GitHub environment files**: `echo "RCLONE_CONFIG<<EOF" >> $GITHUB_ENV` with heredoc — more verbose and error-prone.
+- **Use rclone's `--config` flag with stdin**: Pipe the config content directly. Would work but adds complexity.
+
+**Review notes:** The Python snippet uses `os.environ['RCLONE_CONFIG']` which will raise `KeyError` if the variable is empty — but the `if [[ -z "$RCLONE_CONFIG" ]]` check above handles that case first.
+

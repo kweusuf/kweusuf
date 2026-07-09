@@ -216,3 +216,44 @@ docs/change-log/gdrive-upload.md | 19 +++++++++++++++++++
 
 **Review notes:** The Python snippet uses `os.environ['RCLONE_CONFIG']` which will raise `KeyError` if the variable is empty — but the `if [[ -z "$RCLONE_CONFIG" ]]` check above handles that case first.
 
+## `bc43f51a` — Fill in change-log for Python config fix
+
+**Timestamp:** 2026-07-09T11:56:44
+
+**Files changed:**
+
+```text
+docs/change-log/gdrive-upload.md | 42 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+```
+
+**What changed:** Populated the hook-appended skeleton for commit `6400bdd8` with detail about the Python-based config file approach.
+
+**Why (justification):** Hook requires populated fields on every commit.
+
+**Alternatives considered:** None — documentation only.
+
+**Review notes:** No code changes.
+
+## `8222993b` — Add debugging and explicit --config flag for rclone
+
+**Timestamp:** 2026-07-09T12:02:10
+
+**Files changed:**
+
+```text
+.github/workflows/build-and-preview.yml | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+```
+
+**What changed:** Added debug output to the upload step: prints config file size and first 3 lines after writing, prints the extracted remote name before uploading. Added explicit `--config "$CONFIG_FILE"` flag to the rclone command to ensure it reads from `~/.config/rclone/rclone.conf` and not from a file in the working directory.
+
+**Why (justification):** The `Failed to load config file` error persists even after switching from `printf` to Python. The error shows rclone treating the config content as a filename, suggesting it's not finding the config file we wrote. The `--config` flag forces rclone to use the correct path. Debug output will reveal whether the file is written correctly and what remote name is extracted.
+
+**Alternatives considered:**
+
+- **Skip rclone entirely, use curl with Drive API**: Requires correct OAuth client credentials, which are hardcoded in the rclone binary and change across versions. Harder to maintain.
+- **Base64-encode the secret**: User would run `base64 ~/.config/rclone/rclone.conf` and store the encoded value. Workflow decodes it. More robust but adds setup complexity.
+
+**Review notes:** The `--config` flag is the key fix — rclone may be reading a config from the current directory (the repo root) instead of `~/.config/rclone/`. Debug output will be visible in CI logs for troubleshooting.
+

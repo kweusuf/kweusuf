@@ -21,3 +21,28 @@ The user shares their resume PDF via a Google Drive link in many places. Now tha
 ### Review notes
 
 The `RCLONE_CONFIG` secret must contain the full `~/.config/rclone/rclone.conf` content. The remote must be named `gdrive`. Token may expire if unused for 6 months — re-run `rclone config` to refresh.
+
+## `76510cdd` — Add Google Drive PDF upload via rclone
+
+**Timestamp:** 2026-07-08T21:37:51
+
+**Files changed:**
+
+```text
+.github/workflows/build-and-preview.yml | 15 +++++++++++++++
+ RESUME-AUTOMATION-README.md             | 15 ++++++++++++++-
+ docs/change-log/gdrive-upload.md        | 23 +++++++++++++++++++++++
+ 3 files changed, 52 insertions(+), 1 deletion(-)
+```
+
+**What changed:** Same as `adf69aaa` — amend added the change-log file to the commit. No code changes.
+
+**Why (justification):** Moved from `main` branch to dedicated `gdrive-upload` branch per user request. Renamed change-log from `main.md` to `gdrive-upload.md`.
+
+**Alternatives considered:** None — branch management only.
+
+**Review notes:** No functional change from previous commit.
+
+## WIP notes
+
+Fixed markdown lint warnings in change-log. `docs/change-log/main.md` is an untracked leftover from the branch switch — not part of this branch's work. Implementation complete, ready to push and merge.

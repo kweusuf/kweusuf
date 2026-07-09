@@ -89,12 +89,14 @@ Trigger the workflow manually from the **Actions** tab:
 
 ### Setting up Google Drive upload (optional)
 
-The workflow can upload the PDF to Google Drive after building, replacing the existing file (preserves your share link).
+The workflow can upload the PDF to Google Drive after building, replacing the existing file by ID (preserves your share link).
 
 1. Install rclone locally: `brew install rclone` (macOS) or `curl https://rclone.org/install.sh | sudo bash` (Linux)
-2. Run `rclone config` and create a remote named `gdrive` with Google Drive access
+2. Run `rclone config` and create a remote with Google Drive access (any name works)
 3. Copy the config: `cat ~/.config/rclone/rclone.conf`
 4. Add as GitHub secret `RCLONE_CONFIG` with the full config file content
+
+The workflow extracts the `refresh_token` from the config and uses the Google Drive API directly to replace the file. No rclone installation needed in CI.
 
 If `RCLONE_CONFIG` is not set, the upload step is skipped silently.
 

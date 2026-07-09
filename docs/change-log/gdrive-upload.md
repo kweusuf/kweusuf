@@ -114,3 +114,44 @@ docs/change-log/gdrive-upload.md | 26 ++++++++++++++++++++++++++
 
 **Review notes:** The parent folder ID (`1196dOMXtqi022tHjQIhle17Wj0rPfq74`) is hardcoded in the workflow. If the file moves to a different folder on Google Drive, this ID needs to be updated. rclone's `copy` command replaces files with matching names in the target folder — verified that the file ID (`191t9WDPxvc-tl4gKenMbwUbahvO4RymU`) is preserved after replacement.
 
+## `a3706ddb` — Fill in change-log for rclone upload fix
+
+**Timestamp:** 2026-07-09T11:36:32
+
+**Files changed:**
+
+```text
+docs/change-log/gdrive-upload.md | 42 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+```
+
+**What changed:** Populated the hook-appended skeleton fields for commit `46ebcefd` with concrete detail — the OAuth approach failure, why rclone was chosen, and the parent folder ID caveat.
+
+**Why (justification):** Hook requires populated fields on every commit.
+
+**Alternatives considered:** None — documentation only.
+
+**Review notes:** No code changes.
+
+## `6e8f41c7` — Fix RCLONE_CONFIG parsing: handle literal newlines in secret
+
+**Timestamp:** 2026-07-09T11:41:02
+
+**Files changed:**
+
+```text
+.github/workflows/build-and-preview.yml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+```
+
+**What changed:** Changed `echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf` to `printf '%b' "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf`. Also changed remote name extraction to read from the written config file instead of the raw secret value.
+
+**Why (justification):** GitHub Actions secrets store multiline values with literal `\n` escape sequences. `echo` writes these literally, producing a single-line config file that rclone can't parse (treats the entire value as a filename). `printf '%b'` converts escape sequences to real newlines.
+
+**Alternatives considered:**
+
+- **Use a base64-encoded secret**: Encode the config as base64, decode in CI. Cleaner but adds an extra step for the user.
+- **Use separate secrets for each config field**: More granular but more complex setup.
+- **Use GitHub environment files**: `echo "RCLONE_CONFIG<<EOF" >> $GITHUB_ENV` approach — more verbose.
+
+**Review notes:** If the secret is stored with actual newlines (not escaped), `printf '%b'` still works correctly — it preserves real newlines and only converts escape sequences. This fix is backward-compatible.

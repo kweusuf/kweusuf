@@ -80,36 +80,18 @@ jobs:
             echo "RCLONE_CONFIG secret not set — skipping Google Drive upload."
             exit 0
           fi
+          sudo apt-get install -y -qq rclone
+          mkdir -p ~/.config/rclone
+          echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
 
-          FILE_ID="191t9WDPxvc-tl4gKenMbwUbahvO4RymU"
-
-          # Extract refresh token from rclone config
-          REFRESH_TOKEN=$(echo "$RCLONE_CONFIG" | grep -o '"refresh_token":"[^"]*"' | cut -d'"' -f4)
-          if [[ -z "$REFRESH_TOKEN" ]]; then
-            echo "Error: Could not extract refresh_token from RCLONE_CONFIG" >&2
-            exit 1
-          fi
-
-          # Get fresh access token using rclone's default OAuth credentials
-          ACCESS_TOKEN=$(curl -s -X POST https://oauth2.googleapis.com/token \
-            -d "client_id=202264815644.apps.googleusercontent.com" \
-            -d "client_secret=X4Z3ca8xfWDb1Voo-_98OzY" \
-            -d "refresh_token=$REFRESH_TOKEN" \
-            -d "grant_type=refresh_token" | python3 -c "import json,sys; print(json.load(sys.stdin)['access_token'])")
-
-          # Replace file content via Drive API (preserves file ID and share link)
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
-            -X PATCH "https://www.googleapis.com/upload/drive/v3/files/${FILE_ID}?uploadType=media" \
-            -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-            -H "Content-Type: application/pdf" \
-            --data-binary @resume.pdf)
-
-          if [[ "$HTTP_CODE" == "200" ]]; then
-            echo "PDF uploaded to Google Drive (file ID: ${FILE_ID})"
-          else
-            echo "Error: Google Drive upload failed (HTTP ${HTTP_CODE})" >&2
-            exit 1
-          fi
+          # Extract the remote name from the config (first line in brackets)
+          REMOTE=$(echo "$RCLONE_CONFIG" | grep -m1 '^\[' | tr -d '[]')
+          # Upload to parent folder — rclone replaces existing file by name, preserving file ID
+          # File ID: 191t9WDPxvc-tl4gKenMbwUbahvO4RymU (Resume_Eusuf_Kanchwala_Backend_Java_Go.pdf)
+          cp resume.pdf "Resume_Eusuf_Kanchwala_Backend_Java_Go.pdf"
+          rclone copy "Resume_Eusuf_Kanchwala_Backend_Java_Go.pdf" "${REMOTE}:/" \
+            --drive-root-folder-id 1196dOMXtqi022tHjQIhle17Wj0rPfq74
+          echo "PDF uploaded to Google Drive (replaced existing file)"
 
       - name: Save source hash
         if: steps.check.outputs.rebuild == 'true'

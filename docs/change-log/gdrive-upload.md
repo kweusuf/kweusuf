@@ -46,3 +46,29 @@ The `RCLONE_CONFIG` secret must contain the full `~/.config/rclone/rclone.conf` 
 ## WIP notes
 
 Fixed markdown lint warnings in change-log. `docs/change-log/main.md` is an untracked leftover from the branch switch — not part of this branch's work. Implementation complete, ready to push and merge.
+
+## `08f04221` — Fix Google Drive upload: use Drive API instead of rclone copyid
+
+**Timestamp:** 2026-07-09T11:24:26
+
+**Files changed:**
+
+```text
+.github/workflows/build-and-preview.yml | 35 ++++++++++++++++++++++++++++-----
+ RESUME-AUTOMATION-README.md             |  6 ++++--
+ docs/change-log/gdrive-upload.md        | 25 +++++++++++++++++++++++
+ 3 files changed, 59 insertions(+), 7 deletions(-)
+```
+
+**What changed:** Replaced the `rclone backend copyid` approach with a direct Google Drive API call. The workflow now extracts the `refresh_token` from the `RCLONE_CONFIG` secret, gets a fresh access token via the OAuth2 token endpoint, and uses `curl` to PATCH the file content via `https://www.googleapis.com/upload/drive/v3/files/{id}?uploadType=media`. No rclone installation needed in CI — uses `curl` and `python3` (both available on `ubuntu-latest`).
+
+**Why (justification):** `rclone backend copyid` copies files *within* Google Drive — it cannot upload a local file to replace an existing Drive file by ID. The Google Drive API's PATCH upload endpoint replaces file content in-place, preserving the file ID and share link.
+
+**Alternatives considered:**
+
+- **rclone copyto with folder path**: Requires knowing the parent folder path. Would create a new file if the path is wrong, breaking the share link.
+- **rclone with --drive-root-folder-id**: Sets the root to the parent folder, but still can't target a specific file ID for replacement.
+- **Install rclone in CI just for the config parsing**: Overkill — the only thing we need from the config is the `refresh_token`, which is a one-line grep.
+
+**Review notes:** The OAuth client credentials (`client_id`/`client_secret`) are rclone's default public credentials, not a secret. The `refresh_token` in `RCLONE_CONFIG` is the actual secret. Tokens may expire if unused for 6 months — re-run `rclone config` locally to refresh.
+

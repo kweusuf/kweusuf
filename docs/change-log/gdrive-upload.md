@@ -257,3 +257,20 @@ docs/change-log/gdrive-upload.md | 42 ++++++++++++++++++++++++++++++++++++++++
 
 **Review notes:** The `--config` flag is the key fix — rclone may be reading a config from the current directory (the repo root) instead of `~/.config/rclone/`. Debug output will be visible in CI logs for troubleshooting.
 
+## `3f20a6bf` — Fill in change-log for debug/flag commit
+**Timestamp:** 2026-07-09T12:03:34
+
+**Files changed:**
+```
+docs/change-log/gdrive-upload.md | 41 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+```
+
+**What changed:** Populated the hook-appended skeleton for commit `8222993b` with detail about the debug output and explicit `--config` flag.
+
+**Why (justification):** Hook requires populated fields on every commit.
+
+**Alternatives considered:** None — documentation only.
+
+**Review notes:** No code changes.
+

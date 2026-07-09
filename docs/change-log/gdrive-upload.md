@@ -155,3 +155,22 @@ docs/change-log/gdrive-upload.md | 42 ++++++++++++++++++++++++++++++++++++++++
 - **Use GitHub environment files**: `echo "RCLONE_CONFIG<<EOF" >> $GITHUB_ENV` approach — more verbose.
 
 **Review notes:** If the secret is stored with actual newlines (not escaped), `printf '%b'` still works correctly — it preserves real newlines and only converts escape sequences. This fix is backward-compatible.
+## `b4a8f1af` — Fix lint warnings in change-log
+
+**Timestamp:** 2026-07-09T11:42:08
+
+**Files changed:**
+
+```text
+docs/change-log/gdrive-upload.md | 41 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+```
+
+**What changed:** Added blank lines around headings and code blocks (MD022, MD031), removed consecutive blank lines (MD012), added language tags to fenced code blocks (MD040).
+
+**Why (justification):** Markdown lint warnings — formatting only, no functional change.
+
+**Alternatives considered:** None — cosmetic fix.
+
+**Review notes:** No code changes.
+

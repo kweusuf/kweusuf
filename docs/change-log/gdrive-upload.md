@@ -72,3 +72,45 @@ Fixed markdown lint warnings in change-log. `docs/change-log/main.md` is an untr
 
 **Review notes:** The OAuth client credentials (`client_id`/`client_secret`) are rclone's default public credentials, not a secret. The `refresh_token` in `RCLONE_CONFIG` is the actual secret. Tokens may expire if unused for 6 months — re-run `rclone config` locally to refresh.
 
+## `88764d8c` — Fix markdown lint warnings in change-log
+
+**Timestamp:** 2026-07-09T11:25:13
+
+**Files changed:**
+
+```text
+docs/change-log/gdrive-upload.md | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+```
+
+**What changed:** Added blank lines around headings (MD022), language tag to fenced code block (MD040), blank lines around fences (MD031), removed consecutive blank lines (MD012).
+
+**Why (justification):** Markdown lint warnings — no functional change, documentation formatting only.
+
+**Alternatives considered:** None — cosmetic fix.
+
+**Review notes:** No code changes.
+
+## `46ebcefd` — Fix Google Drive upload: use rclone copy with root folder ID
+
+**Timestamp:** 2026-07-09T11:35:08
+
+**Files changed:**
+
+```text
+.github/workflows/build-and-preview.yml | 42 ++++++++++-----------------------
+ 1 file changed, 12 insertions(+), 30 deletions(-)
+```
+
+**What changed:** Replaced the OAuth token refresh approach with direct rclone usage. The workflow now installs rclone in CI, sets up the config from `RCLONE_CONFIG` secret, extracts the remote name dynamically, and uses `rclone copy resume.pdf <remote>:/ --drive-root-folder-id 1196dOMXtqi022tHjQIhle17Wj0rPfq74`. rclone handles token refresh automatically. The file is renamed to `Resume_Eusuf_Kanchwala_Backend_Java_Go.pdf` before upload so rclone matches and replaces the existing file by name.
+
+**Why (justification):** The previous approach used hardcoded rclone OAuth client credentials to refresh the token via curl, but the credentials aren't stored in the rclone config — they're compiled into the binary. The refresh failed with `KeyError: 'access_token'`. Using rclone directly avoids this entirely since it handles token refresh internally.
+
+**Alternatives considered:**
+
+- **Fix the OAuth credentials**: Would require finding rclone's current default client_id/client_secret from source code. Fragile — credentials change across rclone versions.
+- **Custom Google OAuth app**: User would need to create a GCP project, enable Drive API, create OAuth credentials. Too much setup for a personal project.
+- **Google Drive API via curl with user-provided credentials**: Requires user to store client_id and client_secret as separate secrets. More complex than needed.
+
+**Review notes:** The parent folder ID (`1196dOMXtqi022tHjQIhle17Wj0rPfq74`) is hardcoded in the workflow. If the file moves to a different folder on Google Drive, this ID needs to be updated. rclone's `copy` command replaces files with matching names in the target folder — verified that the file ID (`191t9WDPxvc-tl4gKenMbwUbahvO4RymU`) is preserved after replacement.
+

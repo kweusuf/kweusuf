@@ -82,10 +82,11 @@ jobs:
           fi
           sudo apt-get install -y -qq rclone
           mkdir -p ~/.config/rclone
-          echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
+          # Use printf '%b' to convert literal \n to real newlines if needed
+          printf '%b' "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
 
           # Extract the remote name from the config (first line in brackets)
-          REMOTE=$(echo "$RCLONE_CONFIG" | grep -m1 '^\[' | tr -d '[]')
+          REMOTE=$(grep -m1 '^\[' ~/.config/rclone/rclone.conf | tr -d '[]')
           # Upload to parent folder — rclone replaces existing file by name, preserving file ID
           # File ID: 191t9WDPxvc-tl4gKenMbwUbahvO4RymU (Resume_Eusuf_Kanchwala_Backend_Java_Go.pdf)
           cp resume.pdf "Resume_Eusuf_Kanchwala_Backend_Java_Go.pdf"

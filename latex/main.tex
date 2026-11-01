@@ -61,6 +61,14 @@
 \pdfgentounicode=1
 
 %-------------------------
+% BUILD VARIANTS
+% A default build produces the full resume.
+% Compile with  pdflatex "\def\SHORTRESUME{}\input{main.tex}"
+% to produce the condensed one-page variant.
+\newif\ifshortresume
+\ifdefined\SHORTRESUME\shortresumetrue\fi
+
+%-------------------------
 % Custom commands
 \newcommand{\resumeItem}[1]{
   \item\small{
@@ -127,7 +135,7 @@
 % }
 
 \small{
-    Backend Engineer with 8 years building enterprise-grade data protection, disaster recovery, and automation platforms. Expertise in Java, Go, and cloud-native microservices across AWS, Azure, and GCP. Patent co-inventor for “Cyber Recovery Mechanism”.
+    Backend Engineer with 8 years building enterprise-grade data protection, disaster recovery, and AI agent platforms. Expertise in Java, Go, and cloud-native microservices across AWS, Azure, and GCP, including production LLM agent systems for automated customer support. Patent co-inventor for “Cyber Recovery Mechanism”.
 }
 
 
@@ -137,8 +145,8 @@
  \begin{itemize}[leftmargin=0.15in, label={}]
     \small{
         \item{
-            \textbf{Core Expertise}{: Java, Golang, Distributed Systems, Microservices, AWS, Azure, Kubernetes, Spring Boot, SQL/NoSQL Databases} \\
-            \textbf{Technologies}{: Python, Bash, Clojure, GCP, GraphQL, Kafka, RabbitMQ, Redis, Docker, Jenkins, Git} \\
+            \textbf{Core Expertise}{: Java, Golang, Rust, Distributed Systems, Microservices, AWS, Azure, Kubernetes, Spring Boot, SQL/NoSQL Databases} \\
+            \textbf{Technologies}{: Python, Bash, Clojure, GCP, GraphQL, Kafka, RabbitMQ, Redis, Docker, Jenkins, Git, LLM/RAG (ADK, Gemini, Ollama)} \\
             \textbf{Security \& Compliance}{: RBAC/SSO, SonarQube, Snyk, Gitleaks, Blackduck} \\
         }
     }
@@ -153,6 +161,8 @@
       {\href{https://www.helpshift.com/}{Helpshift - A Keywords Technology}}{Pune $|$ Remote}
       {SDE-3}{May 2025 - Present}
       \resumeItemListStart
+        \resumeItem{Led the fix for a P0 bug where issues could be over-assigned to agents, then designed and shipped a priority-group (class-FIFO) assignment mechanism for the live-chat issue-assignment service in \textbf{Rust/Redis}, replacing random assignment with ordering based on each agent's confirmed workload. Rolled out behind an opt-in, fail-open gate so live traffic was never at risk, and documented in a design spec covering rules, risks, fairness analysis, and rollout.}
+        \resumeItem{Delivered production features for \textbf{Care AI}, Helpshift's agentic player-support product built on Google's Agent Development Kit (ADK) and Gemini models, throughout Hypercare: guardrails, multi-stage prompt validation, a PII detection and masking layer, and retrieval over FAQ, procedure, knowledge base, and glossary sources with escalation to a human agent.}
         \resumeItem{Led design and development of backend systems for an enterprise automation platform enabling configurable Branding \& Customisation, FAQs and customer complaint workflows and self-service experiences at scale.}
         \resumeItem{Partnered with product and platform teams to ship automation features like Duplicate and Replace Bots, App Level Permissions, used by global gaming clients.}
         % \resumeItem{Served as an on-call backend engineer, ensuring 99.9\% uptime and rapid incident resolution for critical services.}
@@ -164,8 +174,10 @@
         \resumeItem{\textbf{Patent Co-inventor \& Technical Lead} \textit{(Patent Pending)}: Designed and prototyped “Cyber Recovery Mechanism”, an air-gapped isolated recovery system for ransomware forensic analysis - productized as \href{https://www.netapp.com/product-updates/ransomware-resilience-service-isolated-recovery/}{Isolated Recovery Environment} in NetApp's \href{https://www.netapp.com/data-services/ransomware-resilience/}{Ransomware Resilience service.}}
         \resumeItem{Engineered 8+ microservices in Java and Go for NetApp \href{https://www.netapp.com/snapcenter/}{SnapCenter} and \href{https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/}{VMware plugin}, reducing backup operation latency by 25\% and improving overall throughput by 40\%.}
         \resumeItem{Developed core failover/failback orchestration logic for \href{https://www.netapp.com/data-services/disaster-recovery/}{Disaster Recovery-as-a-Service} in \href{https://bluexp.netapp.com/}{BlueXP}, enabling seamless DR operations across ONTAP, FSx, ANF, and CVO storage platforms.}
+        \ifshortresume\else
         \resumeItem{Led security compliance for \href{https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity}{US EO 14028}, achieving a 100\% reduction in high-severity vulnerabilities.}
-        \resumeItem{Designed and executed PostgreSQL-to-cloud data warehouse migration strategy for IoT client, implementing sharding, regional load balancing, and disaster recovery—resulting in 45\% infrastructure cost reduction.}
+        \fi
+        \resumeItem{Designed and executed PostgreSQL-to-cloud data warehouse migration strategy for IoT client, implementing sharding, regional load balancing, and disaster recovery, resulting in 45\% infrastructure cost reduction.}
         % \resumeItem{Worked on \underline{\href{https://www.netapp.com/data-services/disaster-recovery/}{Disaster Recovery as a Service (DRaaS)}} for \underline{\href{https://bluexp.netapp.com/}{NetApp BlueXP}} - SaaS for hybrid multi-cloud applications. This enables failover and failback for data on an \underline{\href{https://www.netapp.com/ontap-data-management-software/}{ONTAP}}/\underline{\href{https://azure.microsoft.com/en-us/services/netapp/}{ANF}}/\underline{\href{https://aws.amazon.com/fsx/}{FSx}}/\underline{\href{https://www.netapp.com/ontap-cloud/}{CVO}} storage cluster backed up to the public cloud in case of an error or a disaster, or if the customer wants to migrate their on-prem setup to the cloud.}
         % \resumeItem{Won the NetApp Data Services Hackathon for Cleanroom Recovery for Forensic Analysis (CRaaS) which enabled detection and instant provision of air-gapped environments for compromised instances in case of a ransomware attack.}
         % \resumeItem{Engineered and deployed 8+ components in Java and Golang for \underline{\href{https://www.netapp.com/snapcenter/}{SnapCenter}} - NetApp's backup, restore, and clone solution, its \underline{\href{https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/}{Plugin for VMware vSphere}} and \underline{\href{https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/}{ONTAP Tools for VMware vSphere}}, enhancing overall application performance by 40\% and reducing load times by 25\%, resulting in a more streamlined user experience.}
@@ -191,10 +203,15 @@
       {Senior Software Engineer}{June 2018 -- Apr 2022}
       \resumeItemListStart
       \resumeItem{Core contributor to \href{https://www.leaplogic.io/}{LeapLogic}, an ETL modernization platform serving Fortune 500 clients (BofA, AmEx, Wells Fargo), enabling migrations from legacy systems (Teradata, Netezza, Oracle) to cloud-native platforms (AWS Redshift, Snowflake, Databricks).}
+      \resumeItem{Built an in-house message queue in core Java, used in production for asynchronous job delivery.}
+      \ifshortresume\else
       \resumeItem{Reduced metadata discovery time by 60\% through caching optimizations.}
+      \fi
       \resumeItem{Architected and implemented enterprise-grade RBAC and SSO authentication system from scratch using Spring Security, enabling secure multi-tenant access control.}
-      \resumeItem{Built a SQL translator (Hackathon project → production pilot), improving trial adoption by 30\%.}
+      \resumeItem{Built a SQL translator (Hackathon project to production pilot), improving trial adoption by 30\%.}
+      \ifshortresume\else
       \resumeItem{Led and mentored a team of 4 engineers, consistently delivering sprints 25\% ahead of schedule through effective task decomposition and agile practices.}
+      \fi
         % \resumeItem{Developed various backend components for \underline{\href{https://www.leaplogic.io/}{LeapLogic}} ETL in Java and Python. This product is for enterprises to migrate their Data Warehouse workloads from traditionally expensive solutions to modern Data Lakes, which provide more flexibility, ease of use, and cost-efficiency.}
         % \resumeItem{\underline{\href{https://www.leaplogic.io/}{LeapLogic}} is successfully being used at various clients such as BofA, AmEx, Wells Fargo, etc and has reduced costs up to 90\% in certain cases. Later, it got integrated into AWS Glue, and now it is being used worldwide.}
         % \resumeItem{Created and enhanced various utilities and components for Data Source \& Target Metadata Discovery which reduces operational time by 60\% using caching, SSO \& RBAC for application governance, Data, Query and File Validations for the source and transformed data to validate the integrity of the Migration operations, and an integrated Licensing solution.}
@@ -203,6 +220,7 @@
         % \resumeItem{Was responsible for mentoring and leading a team of 4 people to deliver various SDLC targets. We consistently performed 25\% better against teams of similar capacities.}
     \resumeItemListEnd
 
+    \ifshortresume\else
     \resumeSubheading
       {\href{https://www.tcs.com/}{Tata Consultancy Services}}{Mumbai $|$ Remote}
       {Intern - Data Mining and Insights}{June 2017 -- Nov 2017}
@@ -210,6 +228,7 @@
         % \resumeItem{Authored a utility using Python to extract actionable insights from incoming flat-file counter data; reduced data processing time by 60\% using advanced DOM parser and increased analytics accuracy by 25\%}
         \resumeItem{Developed Python-based data processing utility using advanced DOM parsing to extract insights from telecom counter data, reducing processing time by 55\% and improving analytics accuracy by 25\%.}
       \resumeItemListEnd
+    \fi
 
   \resumeSubHeadingListEnd
 }
@@ -243,20 +262,32 @@
 \section{Projects}
     \resumeSubHeadingListStart
       \resumeProjectHeading
+          {\textbf{\href{https://github.com/kweusuf/traitors-simulation-using-agents}{LLM Social Simulation Framework}} $|$ \emph{Python, Pydantic, LLM Agents, Ollama, SQLite}}{Sep 2026 -- Oct 2026}
+          \resumeItemListStart
+            \resumeItem{Built a configuration-driven framework in Python for multi-agent LLM social simulation, running complete 22-player games with per-agent personas, decaying per-observer memory, and structurally enforced information channels across 452 passing tests.}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{\href{https://red-rising-compendium-lyart.vercel.app/\#/search}{Red Rising Compendium}} $|$ \emph{Python, NLP, Static Web App}}{July 2026}
+          \resumeItemListStart
+            \resumeItem{Built a spoiler-safe knowledge graph and static web app that parses the EPUB corpus into character, faction, location, and event entities with chapter-level temporal attribution.}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{\href{https://github.com/kweusuf/novel-qa}{Novel QA}} $|$ \emph{Golang, Ollama, RAG}}{July 2025 -- Aug 2025}
+          \resumeItemListStart
+            \resumeItem{Built a retrieval-augmented generation (RAG) system in Go that grounds an Ollama-hosted LLM in a custom document corpus to answer domain-specific questions.}
+          \resumeItemListEnd
+      \resumeProjectHeading
           {\textbf{\href{https://github.com/kweusuf/url-shortner}{URL Shortener}} $|$ \emph{Golang, Go Kit, MongoDB, Docker, Make}}{April 2025 -- May 2025}
           \resumeItemListStart
             \resumeItem{Built production-ready URL shortener with TTL-based expiration, featuring Go Kit microservices architecture, MongoDB persistence, and collision-resistant hash generation.}
           \resumeItemListEnd
-      % \resumeProjectHeading
-      %     {\textbf{\href{https://github.com/kweusuf/job-scheduler-app}{Job Scheduler}} $|$ \emph{Golang, Go Kit, Docker, Make}}{Dec 2024 -- Jan 2025}
-      %     \resumeItemListStart
-      %       \resumeItem{Created a generic job scheduler inspired by Netflix Conductor with future extensibility in mind.}
-      %     \resumeItemListEnd
+      \ifshortresume\else
       \resumeProjectHeading
           {\textbf{\href{https://github.com/kweusuf/TailFile}{TailFile}} $|$ \emph{Java, JSch, Swing}}{Sep 2020 -- Jan 2021}
           \resumeItemListStart
             \resumeItem{Created a Java desktop application for real-time log file monitoring across remote servers via SSH, eliminating repetitive terminal operations for development teams.}
           \resumeItemListEnd
+      \fi
     \resumeSubHeadingListEnd
 
 

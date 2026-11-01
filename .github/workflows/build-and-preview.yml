@@ -30,24 +30,21 @@ jobs:
       - name: Check for source changes
         id: check
         run: |
-          # Compute hash of all LaTeX source files
-          HASH=$(find latex/ -type f \( -name '*.tex' -o -name '*.sty' -o -name '*.cls' -o -name '*.bib' \) \
-              -print0 2>/dev/null | sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1)
-          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
-
-          # Compare with stored hash
-          STORED_HASH=""
-          if [[ -f .latex-source-hash ]]; then
-            STORED_HASH=$(cat .latex-source-hash)
+          FORCE="${{ inputs.force || 'false' }}"
+          if [[ "$FORCE" == "true" ]]; then
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
+            echo "Forced rebuild."
+            exit 0
           fi
 
-          FORCE="${{ inputs.force || 'false' }}"
-          if [[ "$FORCE" == "true" ]] || [[ "$HASH" != "$STORED_HASH" ]] || [[ ! -f resume.pdf ]]; then
-            echo "rebuild=true" >> "$GITHUB_OUTPUT"
-            echo "Change detected (force=$FORCE, hash_changed=$([[ "$HASH" != "$STORED_HASH" ]] && echo yes || echo no), pdf_exists=$([[ -f resume.pdf ]] && echo yes || echo no))"
-          else
+          # build-resume.sh owns the source hash and the PDF inventory, so this
+          # caller cannot drift from the local build.
+          chmod +x build-resume.sh
+          if ./build-resume.sh --check; then
             echo "rebuild=false" >> "$GITHUB_OUTPUT"
-            echo "No changes detected — skipping rebuild."
+            echo "No changes detected, skipping rebuild."
+          else
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Install dependencies
@@ -58,12 +55,9 @@ jobs:
             texlive-latex-base texlive-latex-extra texlive-fonts-recommended \
             imagemagick ghostscript
 
-      - name: Build LaTeX → PDF
+      - name: Build LaTeX to PDFs
         if: steps.check.outputs.rebuild == 'true'
-        run: |
-          cd latex
-          pdflatex -interaction=nonstopmode -halt-on-error main.tex
-          mv main.pdf ../resume.pdf
+        run: ./build-resume.sh
 
       - name: Generate preview image
         if: steps.check.outputs.rebuild == 'true'
@@ -112,18 +106,14 @@ jobs:
             --drive-root-folder-id 1196dOMXtqi022tHjQIhle17Wj0rPfq74
           echo "PDF uploaded to Google Drive (replaced existing file)"
 
-      - name: Save source hash
-        if: steps.check.outputs.rebuild == 'true'
-        run: |
-          echo "${{ steps.check.outputs.hash }}" > .latex-source-hash
-
       - name: Commit changes
         if: steps.check.outputs.rebuild == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          git add resume.pdf .latex-source-hash assets/resume-preview.jpg
+          # .latex-source-hash is written by build-resume.sh
+          git add resume.pdf resume-1page.pdf .latex-source-hash assets/resume-preview.jpg
 
           if git diff --staged --quiet; then
             echo "No content changes to commit (binary outputs identical)."

@@ -47,6 +47,8 @@ The `RCLONE_CONFIG` secret must contain the full `~/.config/rclone/rclone.conf` 
 
 Fixed markdown lint warnings in change-log. `docs/change-log/main.md` is an untracked leftover from the branch switch — not part of this branch's work. Implementation complete, ready to push and merge.
 
+Reset branch back to `cb82984` (change-log skeleton commit). The merge commit `b5254fc` and subsequent commits were dropped. Change-log file has unstaged modifications from the reset. Not committing yet — evaluating branch state before proceeding.
+
 ## `08f04221` — Fix Google Drive upload: use Drive API instead of rclone copyid
 
 **Timestamp:** 2026-07-09T11:24:26

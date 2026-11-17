@@ -53,17 +53,28 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq \
             texlive-latex-base texlive-latex-extra texlive-fonts-recommended \
-            imagemagick ghostscript
+            ghostscript
 
       - name: Build LaTeX to PDFs
         if: steps.check.outputs.rebuild == 'true'
         run: ./build-resume.sh
 
-      - name: Generate preview image
+      - name: Generate preview images (one per page)
         if: steps.check.outputs.rebuild == 'true'
         run: |
           chmod +x update-resume-preview.sh
           ./update-resume-preview.sh
+
+          # The profile README shows every page, so a page without a preview is
+          # a broken profile. Fail the run instead of committing an incomplete set.
+          PAGES=$(gs -q -dNODISPLAY -dSAFER --permit-file-read="$PWD/resume.pdf" \
+            -c "($PWD/resume.pdf) (r) file runpdfbegin pdfpagecount = quit")
+          PREVIEWS=$(find assets -maxdepth 1 -name 'resume-preview-[0-9]*.jpg' | wc -l | tr -d ' ')
+          echo "resume.pdf pages: $PAGES; preview images: $PREVIEWS"
+          if [[ "$PAGES" != "$PREVIEWS" ]]; then
+            echo "::error::Expected $PAGES preview image(s), found $PREVIEWS."
+            exit 1
+          fi
 
       - name: Upload PDF to Google Drive
         if: steps.check.outputs.rebuild == 'true'
@@ -112,8 +123,9 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          # .latex-source-hash is written by build-resume.sh
-          git add resume.pdf resume-1page.pdf .latex-source-hash assets/resume-preview.jpg
+          # .latex-source-hash is written by build-resume.sh; -A assets/ also
+          # stages removed page images when the resume shrinks.
+          git add -A assets/ resume.pdf resume-1page.pdf .latex-source-hash
 
           if git diff --staged --quiet; then
             echo "No content changes to commit (binary outputs identical)."

@@ -1,16 +1,28 @@
-<!-- Simple GitHub-compatible image with hover tooltip -->
+<!-- GitHub cannot embed a PDF in a README (its sanitizer strips iframes/embeds),
+     so every page is rendered to an image by update-resume-preview.sh. -->
+
 <p align="center">
-  <a href="https://kweusuf.is-a.dev" title="🔗 Click to view my full resume - Opens in new tab">
-    <img src="./assets/resume-preview.jpg"
-         alt="Resume Preview - Click to view my full resume"
-         title="🔗 Click to view my full resume"
-         style="width: 100%; max-width: 600px; height: auto; border: 2px solid #e1e4e8; border-radius: 6px; transition: border-color 0.1s ease, transform 0.1s ease;"
-         onmouseover="this.style.borderColor='#0366d6'; this.style.transform='scale(1.01)';"
-         onmouseout="this.style.borderColor='#e1e4e8'; this.style.transform='scale(1)';">
+  <a href="./resume.pdf" title="Open the full resume PDF">
+    <img src="./assets/resume-preview-1.jpg"
+         alt="Eusuf Kanchwala — resume, page 1 of 2"
+         title="Open the full resume PDF"
+         width="100%">
   </a>
 </p>
 
-<!-- Alternative simple markdown version for maximum compatibility -->
-<!--
-[![Resume](./assets/resume-preview.jpg)](https://kweusuf.is-a.dev)
--->
+<p align="center">
+  <a href="./resume.pdf" title="Open the full resume PDF">
+    <img src="./assets/resume-preview-2.jpg"
+         alt="Eusuf Kanchwala — resume, page 2 of 2"
+         title="Open the full resume PDF"
+         width="100%">
+  </a>
+</p>
+
+<p align="center">
+  <a href="./resume.pdf">Full resume (PDF)</a>
+  &nbsp;·&nbsp;
+  <a href="./resume-1page.pdf">Condensed PDF</a>
+  &nbsp;·&nbsp;
+  <a href="https://kweusuf.is-a.dev">Portfolio</a>
+</p>

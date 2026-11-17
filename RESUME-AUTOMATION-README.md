@@ -1,6 +1,6 @@
 # Resume Build & Preview Automation
 
-Automated pipeline that compiles the LaTeX resume to PDF and generates a preview image, running daily via GitHub Actions.
+Automated pipeline that compiles the LaTeX resume to PDF and renders every page as a preview image, running daily via GitHub Actions.
 
 ## Single source of truth
 
@@ -10,13 +10,15 @@ Automated pipeline that compiles the LaTeX resume to PDF and generates a preview
 | --- | --- | --- |
 | `resume.pdf` (full) | `./build-resume.sh` | recruiters, LinkedIn, applications |
 | `resume-1page.pdf` (condensed) | `./build-resume.sh` | applications with a one-page limit |
+| `assets/resume-preview-<page>.jpg` (one per PDF page) | `./update-resume-preview.sh` | GitHub profile README |
 | `career-ops/cv.md` | `node scripts/sync-resume.mjs` | every career-ops mode (evaluation, PDF, cover letters) |
 | `app/resume-data.ts` (portfolio site) | `node scripts/sync-resume.mjs` | `kweusuf-portfolio` homepage and projects page |
 
-Because all four come from `main.tex`, they cannot drift apart. Edit `main.tex`, then run:
+Because all of them come from `main.tex`, they cannot drift apart. Edit `main.tex`, then run:
 
 ```bash
 ./build-resume.sh                      # rebuild both PDFs
+./update-resume-preview.sh             # re-render one preview image per page
 node scripts/sync-resume.mjs           # propagate to cv.md and the site
 ./build-resume.sh --check              # exit 1 if the PDFs are stale
 node scripts/sync-resume.mjs --check   # exit 1 if cv.md or the site are stale
@@ -35,16 +37,22 @@ The condensed variant is not a separate file. It is the same `main.tex` compiled
 
 To move a section between the two variants, wrap it in `\ifshortresume\else ... \fi`. Do not create a second `.tex` file.
 
+`build-resume.sh` prints the page count of each PDF and warns when `resume-1page.pdf` is no longer one page, so the condensed variant cannot silently stop meeting a one-page limit.
+
+### Why the profile shows images, not an embedded PDF
+
+GitHub sanitizes README HTML and drops `iframe`, `embed`, and `object`, and its Content-Security-Policy blocks framed content, so a PDF cannot be embedded directly in the profile README. The profile therefore shows one rendered image per page (`assets/resume-preview-<page>.jpg`), each linking to the PDF. GitHub does render PDFs in the repository blob view, which is what the links open.
+
 ## How It Works
 
 The GitHub Action (`.github/workflows/build-and-preview.yml`) runs **daily at 6:00 AM UTC** and:
 
 1. Checks if LaTeX source files have changed, via `./build-resume.sh --check`
-2. Installs TeX Live (`pdflatex`) and ImageMagick
+2. Installs TeX Live (`pdflatex`) and Ghostscript
 3. Compiles `latex/main.tex` → `resume.pdf` and `resume-1page.pdf`
-4. Converts `resume.pdf` to a high-quality preview image (`assets/resume-preview.jpg`)
+4. Renders every page of `resume.pdf` to `assets/resume-preview-<page>.jpg` and fails the run if the image count does not match the PDF page count
 5. Uploads `resume.pdf` to Google Drive (replaces existing file, preserves share link)
-6. Commits and pushes the PDFs, source hash, and preview if they changed
+6. Commits and pushes the PDFs, source hash, and page previews if they changed
 
 If nothing changed, the workflow exits cleanly with no commits.
 
@@ -60,7 +68,7 @@ Trigger the workflow manually from the **Actions** tab:
 ### Prerequisites
 
 - TeX Live with `pdflatex` (`brew install --cask mactex` on macOS, `apt install texlive-latex-base texlive-latex-extra` on Linux)
-- [ImageMagick](https://imagemagick.org/) (`brew install imagemagick`)
+- [Ghostscript](https://www.ghostscript.com/) (`brew install ghostscript` on macOS, `apt install ghostscript` on Linux)
 
 ### Build PDFs
 
@@ -72,13 +80,16 @@ Trigger the workflow manually from the **Actions** tab:
 ./build-resume.sh --output ./build   # Write PDFs to ./build/
 ```
 
-### Generate Preview
+### Generate Previews
 
 ```bash
-./update-resume-preview.sh                    # Converts resume.pdf → assets/resume-preview.jpg
-./update-resume-preview.sh --pdf path/to.pdf  # Use a specific PDF
-./update-resume-preview.sh --output out.jpg   # Write to specific path
+./update-resume-preview.sh                      # resume.pdf → assets/resume-preview-<page>.jpg
+./update-resume-preview.sh --pdf path/to.pdf    # Use a specific PDF
+./update-resume-preview.sh --output-dir ./build # Write images to another directory
+./update-resume-preview.sh --prefix resume      # Change the filename prefix
 ```
+
+One image is written per PDF page, starting at 1. Images from a previous run are removed first, so a shorter resume cannot leave a stale extra page behind.
 
 ### Full Pipeline (local)
 
@@ -105,7 +116,7 @@ Trigger the workflow manually from the **Actions** tab:
 | `scripts/sync-resume.mjs`               | Propagates `main.tex` to the downstream copies |
 | `scripts/sync-resume.config.json`       | Target paths for the sync script |
 | `.latex-source-hash`                    | Hash of source files for rebuild detection |
-| `assets/resume-preview.jpg`             | Generated preview image             |
+| `assets/resume-preview-<page>.jpg`      | Generated page previews (one per PDF page) |
 | `build-resume.sh`                       | Local build script (both PDF variants) |
 | `update-resume-preview.sh`              | PDF → image conversion script       |
 | `.github/workflows/build-and-preview.yml`| CI workflow                        |
@@ -146,6 +157,8 @@ If `RCLONE_CONFIG` is not set, the upload step is skipped silently.
 - **No commits created**: The workflow only commits when content actually changes — check the Actions logs
 - **Build fails**: Check that `latex/main.tex` compiles locally with `./build-resume.sh` — the failed variant's log is written to `latex/resume_full.build.log` or `latex/resume_short.build.log`
 - **Sync reports drift**: Run `node scripts/sync-resume.mjs` to regenerate; never hand-edit `cv.md` or `app/resume-data.ts`, they are overwritten
-- **ImageMagick errors**: The script supports both IM 7 (`magick`) and IM 6 (`convert`)
+- **Profile shows a stale or missing page**: Run `./update-resume-preview.sh` and commit `assets/resume-preview-<page>.jpg`. The workflow fails when the image count does not match the PDF page count.
+- **Condensed variant overflows**: `./build-resume.sh` warns when `resume-1page.pdf` is more than one page. Move content into an `\ifshortresume\else ... \fi` guard.
+- **Ghostscript errors**: Verify `gs --version` works; the preview renderer needs Ghostscript 9.50 or newer.
 - **Push permission issues**: Verify the `PAT_TOKEN` secret has `repo` scope
 - **Google Drive upload fails**: Verify `RCLONE_CONFIG` secret contains the full rclone config file. The remote must be named `gdrive`. Re-run `rclone config` locally if the token expired.

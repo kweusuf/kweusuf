@@ -86,6 +86,15 @@ else
     exit 1
 fi
 
+# Page count of a PDF, so multi-page output is explicit (and so the condensed
+# variant cannot silently stop being one page). Prints nothing if gs is absent.
+page_count() {
+    local pdf="$1"
+    command -v gs &>/dev/null || return 0
+    gs -q -dNODISPLAY -dSAFER --permit-file-read="$pdf" \
+        -c "($pdf) (r) file runpdfbegin pdfpagecount = quit" 2>/dev/null | tr -d '[:space:]' || true
+}
+
 # Compute hash of all LaTeX source files
 compute_hash() {
     find "$LATEX_DIR" -type f \( -name '*.tex' -o -name '*.sty' -o -name '*.cls' -o -name '*.bib' -o -name '*.bst' -o -name '*.biblatex' \) \
@@ -127,6 +136,8 @@ if ! command -v pdflatex &>/dev/null; then
 fi
 
 mkdir -p "$OUTPUT_DIR"
+# Resolve to an absolute path so ghostscript's --permit-file-read can match it.
+OUTPUT_DIR="$(cd "$OUTPUT_DIR" && pwd)"
 
 # Compile from the source directory so \input paths resolve correctly.
 # -jobname keeps the two variants from clobbering each other's aux files.
@@ -168,5 +179,19 @@ fi
 echo "$CURRENT_HASH" > "$HASH_FILE"
 
 for output in "${REQUIRED_OUTPUTS[@]}"; do
-    echo "Build successful: $output"
+    pages=$(page_count "$output")
+    if [[ -n "$pages" ]]; then
+        echo "Build successful: $output ($pages page(s))"
+    else
+        echo "Build successful: $output"
+    fi
 done
+
+# The condensed variant is only useful while it still fits on one page; surface
+# overflow instead of letting resume-1page.pdf quietly grow to two pages.
+if [[ "$BUILD_SHORT" == true ]]; then
+    short_pages=$(page_count "${OUTPUT_DIR}/${SHORT_PDF}")
+    if [[ -n "$short_pages" && "$short_pages" != "1" ]]; then
+        echo "Warning: ${SHORT_PDF} is ${short_pages} pages; the condensed variant no longer fits on one page." >&2
+    fi
+fi
